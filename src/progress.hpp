@@ -17,14 +17,24 @@
    Boston, MA 02111-1307, USA.
 */
 
-#ifndef _XVA_SHA1_HPP_
-#define _XVA_SHA1_HPP_
-
-#include <string>
+#ifndef _XVA_PROGRESS_HPP_
+#define _XVA_PROGRESS_HPP_
 
 namespace XVA
 {
-	std::string SHA1(const std::string& result);
+	class Progress
+	{
+		public:
+			Progress();
+			~Progress();
+
+			void Start();
+			void Update(float val);
+			void Finish(bool error = false);
+		private:
+			bool m_active;
+			int m_curval;
+	};
 }
 
 #endif

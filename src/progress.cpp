@@ -17,14 +17,49 @@
    Boston, MA 02111-1307, USA.
 */
 
-#ifndef _XVA_SHA1_HPP_
-#define _XVA_SHA1_HPP_
+#include <stdio.h>
+#include "progress.hpp"
 
-#include <string>
+using XVA::Progress;
 
-namespace XVA
+Progress::Progress() : m_active(false) , m_curval(0)
 {
-	std::string SHA1(const std::string& result);
+
 }
 
-#endif
+Progress::~Progress()
+{
+	if (m_active)
+		Finish(true);
+}
+
+void Progress::Start()
+{
+	m_active = true;
+	m_curval = 0;
+
+	printf("[");
+	fflush(stdout);
+}
+
+void Progress::Update(float val)
+{
+	val = (int)(val * 78/100);
+	for(; m_curval < val; m_curval++)
+		printf("-");
+	fflush(stdout);
+}
+
+void Progress::Finish(bool error)
+{
+	for(; m_curval < 78; m_curval++)
+	{
+		if (error)
+			printf("x");
+		else
+			printf("-");
+	}
+	m_active = false;
+	printf("]\n");
+	fflush(stdout);
+}

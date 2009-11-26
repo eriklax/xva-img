@@ -6,12 +6,13 @@
 
 #include "writefile.hpp"
 #include "readfile.hpp"
+#include "progress.hpp"
 
 #include "package.hpp"
 
 using XVA::XVAPackage;
 
-XVAPackage::XVAPackage()
+XVAPackage::XVAPackage() : m_verbose(false)
 {
 
 }
@@ -36,12 +37,16 @@ void XVAPackage::AddDir(const std::string& path)
 
 	std::set<std::string> list;
 
+	bool slash = true;
+	if (path.substr(path.size()-1) == "/")
+		slash = false;
+
 	struct dirent * de;
 	while((de=readdir(dp)) != NULL)
 	{
 		if (strcmp(de->d_name, ".") == 0) continue;
 		if (strcmp(de->d_name, "..") == 0) continue;
-		list.insert(path + "/" + de->d_name);
+		list.insert(path + (slash?"/":"") + de->d_name);
 	}
 	closedir(dp);
 
@@ -62,9 +67,17 @@ bool XVAPackage::Write(const std::string& file)
 	if (!fp)
 		throw std::runtime_error("unable to open " + file);
 
+	Progress progress;
+	if (m_verbose)
+		progress.Start();
+
+	size_t x = 0;
 	for(std::list<std::string>::const_iterator i = m_files.begin();
-			i != m_files.end(); i++)
+			i != m_files.end(); i++, x++)
 	{
+		if (m_verbose)
+			progress.Update(((float)x / m_files.size())*100);
+
 		std::string data;
 		if (!XVA::ReadFile(*i, data))
 		{
@@ -158,6 +171,14 @@ bool XVAPackage::Write(const std::string& file)
 		throw std::runtime_error("unable to footer");
 	}
 
+	if (m_verbose)
+		progress.Finish();
+
 	fclose(fp);
 	return true;
+}
+
+void XVAPackage::Verbose()
+{
+	m_verbose = true;
 }

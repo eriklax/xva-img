@@ -1,3 +1,22 @@
+/*
+   Copyright (C) 2009 Erik Lax 
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -8,12 +27,13 @@
 #include "readfile.hpp"
 #include "writefile.hpp"
 #include "sha1.hpp"
+#include "progress.hpp"
 
 #include "disk.hpp"
 
 using XVA::Disk;
 
-Disk::Disk(const std::string& path) : m_path(path)
+Disk::Disk(const std::string& path) : m_path(path) , m_verbose(false)
 {
 }
 
@@ -44,8 +64,15 @@ bool Disk::Export(const std::string& diskpath)
 	if (!fp)
 		throw std::runtime_error("unable to open " + diskpath);
 
+	Progress progress;
+	if (m_verbose)
+		progress.Start();
+
 	for(unsigned int i = 0; i <= (*parts.rbegin()); i++)
 	{
+		if (m_verbose)
+			progress.Update(((float)i / *parts.rbegin())*100);
+
 		if (parts.find(i) != parts.end())
 		{
 			char path2[9];
@@ -93,6 +120,9 @@ bool Disk::Export(const std::string& diskpath)
 		}
 	}
 
+	if (m_verbose)
+		progress.Finish();
+
 	fclose(fp);
 	return true;
 }
@@ -121,9 +151,19 @@ bool Disk::Import(const std::string& diskpath)
 	if (!fp)
 		throw std::runtime_error("unable to open " + diskpath);
 
+	Progress progress;
+	if (m_verbose)
+		progress.Start();
+
 	char buf[1048576];
+	fseek(fp, 0, SEEK_END);
+	int size = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
 	for (size_t i = 0; ; i++)
 	{
+		if (m_verbose)
+			progress.Update(((float)ftell(fp) / size)*100);
+
 		size_t r = fread(buf, 1, sizeof(buf), fp);
 		if (feof(fp)) break;
 
@@ -150,6 +190,14 @@ bool Disk::Import(const std::string& diskpath)
 		}
 	}
 
+	if (m_verbose)
+		progress.Finish();
+
 	fclose(fp);
 	return true;
+}
+
+void Disk::Verbose()
+{
+	m_verbose = true;
 }

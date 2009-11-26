@@ -17,8 +17,11 @@ namespace XVA
 
 			bool Write(const std::string& file)
 				throw (std::runtime_error);
+
+			void Verbose();
 		private:
 			std::list<std::string> m_files;
+			bool m_verbose;
 	};
 }
 
