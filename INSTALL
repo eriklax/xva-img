@@ -1,0 +1,1 @@
+Run "cmake ." followed by "make install". xvatool will be installed in /usr/local/bin/
