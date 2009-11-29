@@ -22,44 +22,83 @@
 
 using XVA::Progress;
 
-Progress::Progress() : m_active(false) , m_curval(0)
+Progress::Progress(const std::string& action)
+: m_active(false) , m_curval(0) , m_error(false) , m_action(action)
 {
-
 }
 
 Progress::~Progress()
 {
+	/* somehow Finish() wasn't called */
 	if (m_active)
-		Finish(true);
+	{
+		m_error = true;
+		Draw();
+	}
 }
 
 void Progress::Start()
 {
 	m_active = true;
 	m_curval = 0;
+	m_error = false;
 
-	printf("[");
-	fflush(stdout);
+	Draw();
 }
 
-void Progress::Update(float val)
-{
-	val = (int)(val * 78/100);
-	for(; m_curval < val; m_curval++)
-		printf("-");
-	fflush(stdout);
+void Progress::Update(float val){
+	m_curval = val;
+	Draw();
 }
 
-void Progress::Finish(bool error)
+void Progress::Draw()
 {
-	for(; m_curval < 78; m_curval++)
+	if (!m_active) return;
+
+	size_t cols = 80;
+	printf("\r");
+
+	printf("%s: |", m_action.c_str());
+	cols -= m_action.size() + 3;	/* [Extracting: |]	*/
+	cols -= 7;						/* [/ 100% ] 		*/
+
+	size_t val = (int)(m_curval * cols/100);
+	size_t i = 0;
+
+	for(; i < cols; i++)
 	{
-		if (error)
-			printf("x");
+		if (i < val)
+			printf("=");
 		else
-			printf("-");
+			printf(" ");
 	}
-	m_active = false;
-	printf("]\n");
+
+	char spinner[] = {
+		'|',
+		'/',
+		'-',
+		'\\',
+	};
+	
+	if (m_error)
+	{
+		printf("%c ERROR\n", spinner[(int)m_curval%4], m_curval);
+		m_active = false;
+	} else {
+		printf("%c %3.0lf%%", spinner[(int)m_curval%4], m_curval);
+
+		if (val == cols)
+		{
+			m_active = false;
+			printf("\n");
+		}
+	}
+
 	fflush(stdout);
+}
+
+void Progress::Finish()
+{
+	m_curval = 100;
+	Draw();
 }

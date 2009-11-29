@@ -20,20 +20,26 @@
 #ifndef _XVA_PROGRESS_HPP_
 #define _XVA_PROGRESS_HPP_
 
+#include <string>
+
 namespace XVA
 {
 	class Progress
 	{
 		public:
-			Progress();
+			Progress(const std::string& action = "");
 			~Progress();
 
 			void Start();
 			void Update(float val);
-			void Finish(bool error = false);
+			void Finish();
 		private:
+			void Draw();
+
 			bool m_active;
-			int m_curval;
+			bool m_error;
+			float m_curval;
+			std::string m_action;
 	};
 }
 

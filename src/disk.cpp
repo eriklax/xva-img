@@ -16,6 +16,9 @@
    Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.
 */
+#define _LARGEFILE_SOURCE
+#define _LARGEFILE64_SOURCE
+#define _FILE_OFFSET_BITS 64
 
 #include <stdio.h>
 #include <string.h>
@@ -64,7 +67,7 @@ bool Disk::Export(const std::string& diskpath)
 	if (!fp)
 		throw std::runtime_error("unable to open " + diskpath);
 
-	Progress progress;
+	Progress progress("Exporting");
 	if (m_verbose)
 		progress.Start();
 
@@ -111,7 +114,8 @@ bool Disk::Export(const std::string& diskpath)
 						std::string(path2) + " to output file");
 			}
 		} else {
-			if (fseek(fp, 1048576, SEEK_CUR) != 0)
+			char bufnull[1048576] = { 0 };
+			if (fwrite(bufnull, 1, sizeof(bufnull), fp) != sizeof(bufnull))
 			{
 				fclose(fp);
 				throw std::runtime_error("cannot add empty chunk to " +
@@ -151,21 +155,31 @@ bool Disk::Import(const std::string& diskpath)
 	if (!fp)
 		throw std::runtime_error("unable to open " + diskpath);
 
-	Progress progress;
+	char buf[1048576];
+	fseek(fp, 0, SEEK_END);
+	unsigned long long size = ftello(fp);
+	fseek(fp, 0, SEEK_SET);
+
+	Progress progress("Importing");
 	if (m_verbose)
 		progress.Start();
 
-	char buf[1048576];
-	fseek(fp, 0, SEEK_END);
-	int size = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
+	char bufnull[1048576] = { 0 };
 	for (size_t i = 0; ; i++)
 	{
 		if (m_verbose)
-			progress.Update(((float)ftell(fp) / size)*100);
+			progress.Update(((float)ftello(fp) / size)*100);
 
 		size_t r = fread(buf, 1, sizeof(buf), fp);
 		if (feof(fp)) break;
+
+		/* skip empty chunks */
+		if ((i > 0 &&  ftello(fp) < size)
+			&& 
+			memcmp(buf, bufnull, sizeof(bufnull)) == 0)
+		{
+			continue;
+		}
 
 		char path2[9];
 		snprintf(path2, sizeof(path2), "%08d", i);

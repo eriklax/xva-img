@@ -86,7 +86,7 @@ bool XVAPackage::Write(const std::string& file)
 	if (!fp)
 		throw std::runtime_error("unable to open " + file);
 
-	Progress progress;
+	Progress progress("Packing");
 	if (m_verbose)
 		progress.Start();
 
