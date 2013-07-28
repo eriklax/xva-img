@@ -1,5 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.0)
 
+SET(CMAKE_CXX_FLAGS_RELEASE "-Wall -Wextra -Wno-deprecated-declarations")
+SET(CMAKE_BUILD_TYPE Release)
+
 PROJECT("xvatool")
 SET(TARGET_NAME "xvatool")
 FILE(GLOB_RECURSE SOURCE_FILES src/*.cpp)

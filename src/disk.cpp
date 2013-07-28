@@ -146,7 +146,7 @@ bool Disk::Import(const std::string& diskpath)
 		if (strcmp(de->d_name, "..") == 0) continue;
 		files++;
 	}
-	closedir(dp);	
+	closedir(dp);
 
 	if (files != 0)
 		throw std::runtime_error("directory " + m_path + " is not empty");
@@ -170,11 +170,11 @@ bool Disk::Import(const std::string& diskpath)
 		if (m_verbose)
 			progress.Update(((float)ftello(fp) / size)*100);
 
-		size_t r = fread(buf, 1, sizeof(buf), fp);
+		fread(buf, 1, sizeof(buf), fp);
 		if (feof(fp)) break;
 
 		/* skip empty chunks */
-		if ((i > 0 &&  ftello(fp) < size)
+		if ((i > 0 && ftello(fp) < (off_t)size)
 			&& 
 			memcmp(buf, bufnull, sizeof(bufnull)) == 0)
 		{
@@ -182,7 +182,7 @@ bool Disk::Import(const std::string& diskpath)
 		}
 
 		char path2[9];
-		snprintf(path2, sizeof(path2), "%08d", i);
+		snprintf(path2, sizeof(path2), "%08lu", i);
 
 		std::string output;
 		output.append(buf, 1048576);

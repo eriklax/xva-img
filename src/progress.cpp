@@ -23,7 +23,10 @@
 using XVA::Progress;
 
 Progress::Progress(const std::string& action)
-: m_active(false) , m_curval(0) , m_error(false) , m_action(action)
+: m_active(false)
+, m_error(false)
+, m_curval(0)
+, m_action(action)
 {
 }
 
@@ -79,10 +82,10 @@ void Progress::Draw()
 		'-',
 		'\\',
 	};
-	
+
 	if (m_error)
 	{
-		printf("%c ERROR\n", spinner[(int)m_curval%4], m_curval);
+		printf("%c ERROR\n", spinner[(int)m_curval%4]);
 		m_active = false;
 	} else {
 		printf("%c %3.0lf%%", spinner[(int)m_curval%4], m_curval);
