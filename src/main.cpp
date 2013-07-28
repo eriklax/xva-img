@@ -29,14 +29,14 @@
 #include "package.hpp"
 #include "disk.hpp"
 
-#define _VERSION_ "1.2"
+#define _VERSION_ "1.3"
 
 std::string program_name = "";
 
 void usage(FILE* fp, int status)
 {
 	fprintf(fp, 
-	"xentool " _VERSION_ " build on " __DATE__
+	"xva-img " _VERSION_ " build on " __DATE__
 		" (c) Erik Lax <erik@datahack.se>\n"
 	"Usage: %s [OPTION...] COMMAND ...\n"
 	"\n"
