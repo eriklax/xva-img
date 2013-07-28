@@ -29,7 +29,7 @@
 #include "package.hpp"
 #include "disk.hpp"
 
-#define _VERSION_ "1.1"
+#define _VERSION_ "1.2"
 
 std::string program_name = "";
 
