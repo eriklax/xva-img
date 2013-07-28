@@ -23,21 +23,3 @@ Splice the disk file (remove all files in the folder, required not to make any u
 Rebuild the XVA file
 
  # xvatool -p package my-virtual-machine-fixed.xva my-virtual-machine/ova.xml my-virtual-machine/Ref\:1/
-
-Manual
-=======
-
-xentool 1.1 build on Nov 29 2009 (c) Erik Lax <erik@datahack.se>
-Usage: ./xvatool [OPTION...] COMMAND ...
-
- Commands
-
- package      <xva-file> <file> [ ,<file>... ]
- disk-export  <xva-disk> <disk-image>
- disk-import  <xva-disk> <disk-image>
-
- Options
-
- -p,  --progress            Show progress
- -h,  --help                Show this help
- -v,  --version             Show version
