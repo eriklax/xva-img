@@ -7,22 +7,22 @@ Example
 =======
 Extract the XVA file.
 
-# mkdir my-virtual-machine
-# tar -xf my-virtual-machine.xva -C my-virtual-machine
-# chmod -R 755 my-virtual-machine
+ # mkdir my-virtual-machine
+ # tar -xf my-virtual-machine.xva -C my-virtual-machine
+ # chmod -R 755 my-virtual-machine
 
 Extract one of the disks
 
-# xvatool -p disk-export my-virtual-machine/Ref\:1/ disk.raw
+ # xvatool -p disk-export my-virtual-machine/Ref\:1/ disk.raw
 
 Splice the disk file (remove all files in the folder, required not to make any unnecessary mistakes)
 
-# rm -rf my-virtual-machine/Ref\:1/*
-# xvatool -p disk-import my-virtual-machine/Ref\:1/ disk.raw
+ # rm -rf my-virtual-machine/Ref\:1/*
+ # xvatool -p disk-import my-virtual-machine/Ref\:1/ disk.raw
 
 Rebuild the XVA file
 
-# xvatool -p package my-virtual-machine-fixed.xva my-virtual-machine/ova.xml my-virtual-machine/Ref\:1/
+ # xvatool -p package my-virtual-machine-fixed.xva my-virtual-machine/ova.xml my-virtual-machine/Ref\:1/
 
 Manual
 =======
