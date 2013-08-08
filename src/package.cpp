@@ -31,9 +31,9 @@
 
 using XVA::XVAPackage;
 
-XVAPackage::XVAPackage() : m_verbose(false)
+XVAPackage::XVAPackage()
+: m_verbose(false)
 {
-
 }
 
 /*
@@ -50,7 +50,7 @@ void XVAPackage::AddFile(const std::string& file)
 void XVAPackage::AddDir(const std::string& path)
 	throw (std::runtime_error)
 {
-	DIR * dp = opendir(path.c_str());
+	DIR* dp = opendir(path.c_str());
 	if (!dp)
 		throw std::runtime_error("unable to open " + path);
 
@@ -60,7 +60,7 @@ void XVAPackage::AddDir(const std::string& path)
 	if (path.substr(path.size()-1) == "/")
 		slash = false;
 
-	struct dirent * de;
+	struct dirent* de;
 	while((de=readdir(dp)) != NULL)
 	{
 		if (strcmp(de->d_name, ".") == 0) continue;
@@ -70,7 +70,7 @@ void XVAPackage::AddDir(const std::string& path)
 	closedir(dp);
 
 	for(std::set<std::string>::const_iterator i = list.begin();
-			i != list.end(); i++)
+			i != list.end(); ++i)
 	{
 		m_files.push_back(*i);
 	}
@@ -92,7 +92,7 @@ bool XVAPackage::Write(const std::string& file)
 
 	size_t x = 0;
 	for(std::list<std::string>::const_iterator i = m_files.begin();
-			i != m_files.end(); i++, x++)
+			i != m_files.end(); ++i, ++x)
 	{
 		if (m_verbose)
 			progress.Update(((float)x / m_files.size())*100);
@@ -110,7 +110,7 @@ bool XVAPackage::Write(const std::string& file)
 		 * this code is subject to be changed, when new types of files
 		 * are added to the xva file!
 		 */
-		const char * file = strrchr(i->c_str(), '/');
+		const char* file = strrchr(i->c_str(), '/');
 		if (file != NULL)
 		{
 			file++;
@@ -135,7 +135,7 @@ bool XVAPackage::Write(const std::string& file)
 		 * build a tar-header
 		 */
 		char header[512] = { 0 };
-		char * ptr = header;
+		char* ptr = header;
 		snprintf(ptr, 100, "%s", file);
 		ptr += 100;
 		snprintf(ptr, 8, "%07d", 0);
@@ -184,7 +184,7 @@ bool XVAPackage::Write(const std::string& file)
 	}
 
 	char null[1024] = { 0 };
-	if (fwrite(null, 1, sizeof(null), fp) != sizeof(null))
+	if (fwrite(null, 1, sizeof null, fp) != sizeof null)
 	{
 		fclose(fp);
 		throw std::runtime_error("unable to footer");

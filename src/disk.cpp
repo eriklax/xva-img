@@ -45,11 +45,11 @@ bool Disk::Export(const std::string& diskpath)
 {
 	std::set<unsigned int> parts;
 
-	DIR * dp = opendir(m_path.c_str());
+	DIR* dp = opendir(m_path.c_str());
 	if (!dp)
 		throw std::runtime_error("unable to open " + m_path);
 
-	struct dirent * de;
+	struct dirent* de;
 	while((de=readdir(dp)) != NULL)
 	{
 		unsigned int part;
@@ -60,7 +60,7 @@ bool Disk::Export(const std::string& diskpath)
 	}
 	closedir(dp);
 
-	if (parts.size() == 0)
+	if (parts.empty())
 		throw std::runtime_error("directory " + m_path + " is empty");
 
 	FILE* fp = fopen(diskpath.c_str(), "w");
@@ -79,7 +79,7 @@ bool Disk::Export(const std::string& diskpath)
 		if (parts.find(i) != parts.end())
 		{
 			char path2[9];
-			snprintf(path2, sizeof(path2), "%08d", i);
+			snprintf(path2, sizeof path2, "%08d", i);
 
 			std::string chunk;
 			if (!XVA::ReadFile((m_path + "/" + path2), chunk))
@@ -115,7 +115,7 @@ bool Disk::Export(const std::string& diskpath)
 			}
 		} else {
 			char bufnull[1048576] = { 0 };
-			if (fwrite(bufnull, 1, sizeof(bufnull), fp) != sizeof(bufnull))
+			if (fwrite(bufnull, 1, sizeof bufnull, fp) != sizeof bufnull)
 			{
 				fclose(fp);
 				throw std::runtime_error("cannot add empty chunk to " +
@@ -134,12 +134,12 @@ bool Disk::Export(const std::string& diskpath)
 bool Disk::Import(const std::string& diskpath)
 	throw (std::runtime_error)
 {
-	DIR * dp = opendir(m_path.c_str());
+	DIR* dp = opendir(m_path.c_str());
 	if (!dp)
 		throw std::runtime_error("unable to open " + m_path);
 
 	size_t files = 0;
-	struct dirent * de;
+	struct dirent* de;
 	while((de=readdir(dp)) != NULL)
 	{
 		if (strcmp(de->d_name, ".") == 0) continue;
@@ -170,19 +170,19 @@ bool Disk::Import(const std::string& diskpath)
 		if (m_verbose)
 			progress.Update(((float)ftello(fp) / size)*100);
 
-		fread(buf, 1, sizeof(buf), fp);
+		fread(buf, 1, sizeof buf, fp);
 		if (feof(fp)) break;
 
 		/* skip empty chunks */
 		if ((i > 0 && ftello(fp) < (off_t)size)
 			&& 
-			memcmp(buf, bufnull, sizeof(bufnull)) == 0)
+			memcmp(buf, bufnull, sizeof bufnull) == 0)
 		{
 			continue;
 		}
 
 		char path2[9];
-		snprintf(path2, sizeof(path2), "%08u", i);
+		snprintf(path2, sizeof path2, "%08u", i);
 
 		std::string output;
 		output.append(buf, 1048576);

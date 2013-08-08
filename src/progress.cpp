@@ -49,7 +49,8 @@ void Progress::Start()
 	Draw();
 }
 
-void Progress::Update(float val){
+void Progress::Update(float val)
+{
 	m_curval = val;
 	Draw();
 }

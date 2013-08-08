@@ -29,7 +29,7 @@ bool XVA::ReadFile(const std::string& path, std::string& result)
 
 	char buf[1024];
 	size_t r;
-	while((r = fread(buf, 1, sizeof(buf), fp)) > 0)
+	while((r = fread(buf, 1, sizeof buf, fp)) > 0)
 	{
 		result.append(buf, r);
 	}

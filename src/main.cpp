@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
 		{
 			argv++;
 			argc--;
-			char * outfile = *argv;
+			char* outfile = *argv;
 
 			argv++;
 			argc--;

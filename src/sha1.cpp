@@ -34,7 +34,7 @@ std::string XVA::SHA1(const std::string& input)
 	char hex[3];
 	for(int i = 0; i < SHA_DIGEST_LENGTH; i++)
 	{
-		snprintf(hex, sizeof(hex), "%02x", hash[i]);
+		snprintf(hex, sizeof hex, "%02x", hash[i]);
 		result.append(hex, 2);
 	}
 	return result;
