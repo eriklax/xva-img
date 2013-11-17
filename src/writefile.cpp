@@ -16,6 +16,9 @@
    Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.
 */
+#define _LARGEFILE_SOURCE
+#define _LARGEFILE64_SOURCE
+#define _FILE_OFFSET_BITS 64
 
 #include <stdio.h>
 #include "writefile.hpp"
@@ -23,8 +26,8 @@
 bool XVA::WriteFile(const std::string& path, const std::string& data)
 {
 	FILE* fp = fopen(path.c_str(), "w");
- 
- 	if (!fp)
+
+	if (!fp)
 		return false;
 
 	if (fwrite(data.c_str(), 1, data.size(), fp) != data.size())

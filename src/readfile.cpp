@@ -16,6 +16,9 @@
    Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.
 */
+#define _LARGEFILE_SOURCE
+#define _LARGEFILE64_SOURCE
+#define _FILE_OFFSET_BITS 64
 
 #include <stdio.h>
 #include "readfile.hpp"
@@ -23,7 +26,7 @@
 bool XVA::ReadFile(const std::string& path, std::string& result)
 {
 	FILE* fp = fopen(path.c_str(), "r");
- 
+
  	if (!fp)
 		return false;
 
