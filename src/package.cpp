@@ -122,7 +122,7 @@ bool XVAPackage::Write(const std::string& file)
 
 				int len = file - i->c_str();
 
-				char str[len];
+				char* str = new char[len];
 				strncpy(str, i->c_str(), len - 1);
 				str[len - 1] = '\0';
 
@@ -131,6 +131,7 @@ bool XVAPackage::Write(const std::string& file)
 					int len = strrchr(str, '/') - str;
 					file = i->c_str() + len + 1;
 				}
+				delete str;
 			}
 		}
 
