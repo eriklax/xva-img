@@ -182,7 +182,7 @@ bool Disk::Import(const std::string& diskpath)
 		}
 
 		char path2[9];
-		snprintf(path2, sizeof path2, "%08u", i);
+		snprintf(path2, sizeof path2, "%08zu", i);
 
 		std::string output;
 		output.append(buf, 1048576);

@@ -148,7 +148,7 @@ bool XVAPackage::Write(const std::string& file)
 		ptr += 8;
 		snprintf(ptr, 8, "%07d", 0);
 		ptr += 8;
-		snprintf(ptr, 12, "%011o", data.size());
+		snprintf(ptr, 12, "%011lo", data.size());
 		ptr += 12;
 		snprintf(ptr, 12, "%011d", 0);
 		ptr += 12;
