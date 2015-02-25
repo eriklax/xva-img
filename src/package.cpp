@@ -131,7 +131,7 @@ bool XVAPackage::Write(const std::string& file)
 					int len = strrchr(str, '/') - str;
 					file = i->c_str() + len + 1;
 				}
-				delete str;
+				delete [] str;
 			}
 		}
 
