@@ -34,9 +34,11 @@ namespace XVA {
 				throw (std::runtime_error);
 
 			void Verbose();
+			void Sparse();
 		private:
 			std::string m_path;
 			bool m_verbose;
+			bool m_sparse;
 	};
 }
 

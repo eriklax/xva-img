@@ -36,7 +36,10 @@
 
 using XVA::Disk;
 
-Disk::Disk(const std::string& path) : m_path(path) , m_verbose(false)
+Disk::Disk(const std::string& path)
+: m_path(path)
+, m_verbose(false)
+, m_sparse(false)
 {
 }
 
@@ -114,12 +117,23 @@ bool Disk::Export(const std::string& diskpath)
 						std::string(path2) + " to output file");
 			}
 		} else {
-			char bufnull[1048576] = { 0 };
-			if (fwrite(bufnull, 1, sizeof bufnull, fp) != sizeof bufnull)
+			if (m_sparse)
 			{
-				fclose(fp);
-				throw std::runtime_error("cannot add empty chunk to " +
-						diskpath);
+				// we skip empty parts, so that the file system may create a "sparse file"
+				if (fseek(fp, 1048576, SEEK_CUR))
+				{
+					fclose(fp);
+					throw std::runtime_error("cannot add sparse chunk to " +
+							diskpath);
+				}
+			} else {
+				char bufnull[1048576] = { 0 };
+				if (fwrite(bufnull, 1, sizeof bufnull, fp) != sizeof bufnull)
+				{
+					fclose(fp);
+					throw std::runtime_error("cannot add empty chunk to " +
+							diskpath);
+				}
 			}
 		}
 	}
@@ -214,4 +228,9 @@ bool Disk::Import(const std::string& diskpath)
 void Disk::Verbose()
 {
 	m_verbose = true;
+}
+
+void Disk::Sparse()
+{
+	m_sparse = true;
 }

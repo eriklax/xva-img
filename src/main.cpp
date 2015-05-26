@@ -1,6 +1,8 @@
 /*
    Copyright (C) 2009 Erik Lax 
 
+   Sparse file support on export added by Jens-U. Mozdzen <jmozdzen@nde.ag>
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
@@ -49,6 +51,7 @@ void usage(FILE* fp, int status)
 	" Options\n"
 	"\n"
 	" -p,  --progress            Show progress\n"
+	" -s,  --sparse              Create sparse files on export\n"
 	" -h,  --help                Show this help\n"
 	" -v,  --version             Show version\n"
 	"\n",
@@ -65,21 +68,26 @@ int main(int argc, char* argv[])
 		usage(stderr, 2);
 
 	bool verbose = false;
+	bool sparse = false;
 	static struct option longopts[] = { 
 		{ "help",		no_argument,		0x0,		'h'	},
 		{ "version",	no_argument,		0x0,		'v'	},
 		{ "progress",	no_argument,		0x0,		'p'	},
+		{ "sparse",	no_argument,		0x0,		's'	},
 		{ 0x0,			0,					0x0,		0	}   
 	}; 
 
 	opterr = 0;
 	optind = 0;
 	int ch;
-	while ((ch = getopt_long(argc, argv, "hvp", longopts, 0x0)) != -1) {
+	while ((ch = getopt_long(argc, argv, "hvps", longopts, 0x0)) != -1) {
 		switch(ch)
 		{
 			case 'p':
 				verbose = true;
+			break;
+			case 's':
+				sparse = true;
 			break;
 			case 'h':
 				usage(stdout, 0);
@@ -148,6 +156,8 @@ int main(int argc, char* argv[])
 			XVA::Disk disk(*argv);
 			if (verbose)
 				disk.Verbose();
+			if (sparse)
+				disk.Sparse();
 			argv++;
 			argc--;
 			disk.Export(*argv);
