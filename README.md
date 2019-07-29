@@ -9,6 +9,14 @@ Requirements
  * CMake
  * g++ or clang++
  * libssl-dev
+ 
+To build
+=======
+Install g++ cmake make libssl-dev
+
+    cmake .
+    make
+    make install
 
 Example
 =======
