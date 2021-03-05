@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
 				usage(stdout, 0);
 			break;
 			case 'v':
-				printf("%s\n", __VERSION__);
+				printf("%s\n", _VERSION_);
 				exit(0);
 			break;
 			case 0: break;
