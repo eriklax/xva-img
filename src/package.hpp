@@ -45,10 +45,10 @@ namespace XVA
 			XVAPackage();
 			void AddFile(const std::string& file);
 			void AddDir(const std::string& path)
-				throw (std::runtime_error);
+				noexcept(false);
 
 			bool Write(const std::string& file)
-				throw (std::runtime_error);
+				noexcept(false);
 
 			void Verbose();
 		private:

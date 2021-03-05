@@ -57,7 +57,7 @@ Disk::Disk(const std::string& path)
 }
 
 bool Disk::Export(const std::string& diskpath)
-	throw (std::runtime_error)
+	noexcept(false)
 {
 	std::set<unsigned int> parts;
 
@@ -159,7 +159,7 @@ bool Disk::Export(const std::string& diskpath)
 }
 
 bool Disk::Import(const std::string& diskpath)
-	throw (std::runtime_error)
+	noexcept(false)
 {
 	DIR* dp = opendir(m_path.c_str());
 	if (!dp)

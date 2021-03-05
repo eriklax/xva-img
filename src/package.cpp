@@ -64,7 +64,7 @@ void XVAPackage::AddFile(const std::string& file)
  * Add all files in a directory to the file list
  */
 void XVAPackage::AddDir(const std::string& path)
-	throw (std::runtime_error)
+	noexcept(false)
 {
 	DIR* dp = opendir(path.c_str());
 	if (!dp)
@@ -96,7 +96,7 @@ void XVAPackage::AddDir(const std::string& path)
  * Write the XVA Package to file
  */
 bool XVAPackage::Write(const std::string& file)
-	throw (std::runtime_error)
+	noexcept(false)
 {
 	FILE* fp = fopen(file.c_str(), "w");
 	if (!fp)

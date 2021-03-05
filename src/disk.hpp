@@ -42,9 +42,9 @@ namespace XVA {
 		public:
 			Disk(const std::string& path);
 			bool Export(const std::string& diskpath)
-				throw (std::runtime_error);
+				noexcept(false);
 			bool Import(const std::string& diskpath)
-				throw (std::runtime_error);
+				noexcept(false);
 
 			void Verbose();
 			void Sparse();
