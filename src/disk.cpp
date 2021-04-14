@@ -108,19 +108,29 @@ bool Disk::Export(const std::string& diskpath)
 
 			std::string checksum;
 			if (!XVA::ReadFile(
-					(m_path + "/" + path2 + ".xxhash"),
+					(m_path + "/" + path2 + ".checksum"),
 					checksum)
 				)
 			{
-				fclose(fp);
-				throw std::runtime_error("unable to read " +
-						std::string(path2) + ".xxhash");
-			}
-
-			if (checksum != XVA::XXHASH(chunk))
+				if (!XVA::ReadFile(
+						(m_path + "/" + path2 + ".xxhash"),
+						checksum)
+					)
+				{
+					fclose(fp);
+					throw std::runtime_error("unable to read " +
+							std::string(path2) + ".checksum and " +
+							std::string(path2) + ".xxhash");
+				} else if (checksum != XVA::XXHASH(chunk))
+				{
+					fclose(fp);
+					throw std::runtime_error("invalid xxh64 checksum for " +
+							std::string(path2));
+				}
+			} else if (checksum != XVA::SHA1(chunk))
 			{
 				fclose(fp);
-				throw std::runtime_error("invalid checksum for " +
+				throw std::runtime_error("invalid sha1 checksum for " +
 						std::string(path2));
 			}
 
