@@ -30,14 +30,34 @@
    files in the program, then also delete it here.
 */
 
-#ifndef _XVA_XXHASH_HPP_
-#define _XVA_XXHASH_HPP_
+#include <stdio.h>
+#include <xxhash.h>
+#include "xxh64.hpp"
 
-#include <string>
-
-namespace XVA
+std::string XVA::XXH64(const std::string& input)
 {
-	std::string XXHASH(const std::string& input);
-}
+	XXH64_state_t* const state = XXH64_createState();
+	XXH64_hash_t const seed = 0;
+	XXH64_reset(state, seed);
 
-#endif
+	XXH64_update(state, input.c_str(), input.size());
+	XXH64_hash_t const int_digest = XXH64_digest(state);
+
+	char digest[8];
+	XXH64_canonicalFromHash((XXH64_canonical_t *)digest, int_digest);
+	XXH64_freeState(state);
+
+	char digest_chars[16];
+	for (int i = 0, j = 0; i < 8; i++) {
+		unsigned char c;
+		c = (digest[i] >> 4) & 0xf;
+		c = (c > 9) ? c + 'A' - 10 : c + '0';
+		digest_chars[j++] = c;
+		c = (digest[i] & 0xf);
+		c = (c > 9) ? c + 'A' - 10 : c + '0';
+		digest_chars[j++] = c;
+	}
+	std::string hexdigest(digest_chars);
+	hexdigest.resize(16);
+	return hexdigest;
+}
