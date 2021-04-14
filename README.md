@@ -9,6 +9,7 @@ Requirements
  * CMake
  * g++ or clang++
  * libssl-dev
+ * libxxhash-dev
  
 To build
 =======
