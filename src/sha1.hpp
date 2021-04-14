@@ -37,7 +37,7 @@
 
 namespace XVA
 {
-	std::string SHA1(const std::string& result);
+	std::string SHA1(const std::string& input);
 }
 
 #endif

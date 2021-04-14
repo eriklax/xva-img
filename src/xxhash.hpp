@@ -37,7 +37,7 @@
 
 namespace XVA
 {
-	std::string XXHASH(const std::string& result);
+	std::string XXHASH(const std::string& input);
 }
 
 #endif

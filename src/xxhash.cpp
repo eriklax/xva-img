@@ -45,21 +45,19 @@ std::string XVA::XXHASH(const std::string& input)
 	XXH64_hash_t const intdigest = XXH64_digest(state);
 
 	char digest[8];
-	char digest_chars[16];
 	XXH64_canonicalFromHash((XXH64_canonical_t *)digest, intdigest);
 	XXH64_freeState(state);
 
-	int i, j;
-	for (i = j = 0; i < 8; i++) {
+	std::string hexdigest;
+	for (int i = 0, j = 0; i < 8; i++) {
 		unsigned char c;
 		c = (digest[i] >> 4) & 0xf;
 		c = (c > 9) ? c + 'A' - 10 : c + '0';
-		digest_chars[j++] = c;
+		hexdigest[j++] = c;
 		c = (digest[i] & 0xf);
 		c = (c > 9) ? c + 'A' - 10 : c + '0';
-		digest_chars[j++] = c;
+		hexdigest[j++] = c;
 	}
-	std::string hexdigest(digest_chars);
 	hexdigest.resize(16);
 	return hexdigest;
 }
