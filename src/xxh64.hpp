@@ -30,14 +30,14 @@
    files in the program, then also delete it here.
 */
 
-#ifndef _XVA_SHA1_HPP_
-#define _XVA_SHA1_HPP_
+#ifndef _XVA_XXH64_HPP_
+#define _XVA_XXH64_HPP_
 
 #include <string>
 
 namespace XVA
 {
-	std::string SHA1(const std::string& input);
+	std::string XXH64(const std::string& input);
 }
 
 #endif

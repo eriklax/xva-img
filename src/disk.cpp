@@ -43,6 +43,7 @@
 #include "readfile.hpp"
 #include "writefile.hpp"
 #include "sha1.hpp"
+#include "xxh64.hpp"
 #include "progress.hpp"
 
 #include "disk.hpp"
@@ -111,15 +112,25 @@ bool Disk::Export(const std::string& diskpath)
 					checksum)
 				)
 			{
-				fclose(fp);
-				throw std::runtime_error("unable to read " +
-						std::string(path2) + ".checksum");
-			}
-
-			if (checksum != XVA::SHA1(chunk))
+				if (!XVA::ReadFile(
+						(m_path + "/" + path2 + ".xxhash"),
+						checksum)
+					)
+				{
+					fclose(fp);
+					throw std::runtime_error("unable to read " +
+							std::string(path2) + ".checksum and " +
+							std::string(path2) + ".xxhash");
+				} else if (checksum != XVA::XXH64(chunk))
+				{
+					fclose(fp);
+					throw std::runtime_error("invalid xxh64 checksum for " +
+							std::string(path2));
+				}
+			} else if (checksum != XVA::SHA1(chunk))
 			{
 				fclose(fp);
-				throw std::runtime_error("invalid checksum for " +
+				throw std::runtime_error("invalid sha1 checksum for " +
 						std::string(path2));
 			}
 
