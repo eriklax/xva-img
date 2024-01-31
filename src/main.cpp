@@ -44,7 +44,7 @@
 #include "package.hpp"
 #include "disk.hpp"
 
-#define _VERSION_ "1.4.2"
+#define _VERSION_ "1.5.0"
 
 std::string program_name = "";
 
