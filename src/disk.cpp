@@ -39,6 +39,7 @@
 #include <dirent.h>
 #include <set>
 #include <errno.h>
+#include <iostream>
 
 #include "readfile.hpp"
 #include "writefile.hpp"
@@ -54,6 +55,7 @@ Disk::Disk(const std::string& path)
 : m_path(path)
 , m_verbose(false)
 , m_sparse(false)
+, m_ignore_checksum(false)
 {
 }
 
@@ -123,15 +125,23 @@ bool Disk::Export(const std::string& diskpath)
 							std::string(path2) + ".xxhash");
 				} else if (checksum != XVA::XXH64(chunk))
 				{
-					fclose(fp);
-					throw std::runtime_error("invalid xxh64 checksum for " +
-							std::string(path2));
+					if(!m_ignore_checksum)
+					{
+						fclose(fp);
+						throw std::runtime_error("invalid xxh64 checksum for " +
+								std::string(path2));
+					}
+					std::cerr << "invalid xxh64 checksum for " << std::string(path2) << std::endl;
 				}
 			} else if (checksum != XVA::SHA1(chunk))
 			{
-				fclose(fp);
-				throw std::runtime_error("invalid sha1 checksum for " +
-						std::string(path2));
+				if(!m_ignore_checksum)
+				{
+					fclose(fp);
+					throw std::runtime_error("invalid sha1 checksum for " +
+							std::string(path2));
+				}
+				std::cerr << "invalid sha1 checksum for " << std::string(path2) << std::endl;
 			}
 
 			if (fwrite(chunk.c_str(), 1, chunk.size(), fp) != chunk.size())
@@ -257,4 +267,9 @@ void Disk::Verbose()
 void Disk::Sparse()
 {
 	m_sparse = true;
+}
+
+void Disk::IgnoreChecksum()
+{
+	m_ignore_checksum = true;
 }

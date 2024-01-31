@@ -48,10 +48,12 @@ namespace XVA {
 
 			void Verbose();
 			void Sparse();
+			void IgnoreChecksum();
 		private:
 			std::string m_path;
 			bool m_verbose;
 			bool m_sparse;
+			bool m_ignore_checksum;
 	};
 }
 

@@ -65,6 +65,7 @@ void usage(FILE* fp, int status)
 	"\n"
 	" -p,  --progress            Show progress\n"
 	" -s,  --sparse              Create sparse files on export\n"
+	" -i,  --ignore-checksum     Only warn on failed checksum\n"
 	" -h,  --help                Show this help\n"
 	" -v,  --version             Show version\n"
 	"\n",
@@ -82,18 +83,20 @@ int main(int argc, char* argv[])
 
 	bool verbose = false;
 	bool sparse = false;
+	bool ignore_checksum = false;
 	static struct option longopts[] = { 
 		{ "help",		no_argument,		0x0,		'h'	},
-		{ "version",	no_argument,		0x0,		'v'	},
-		{ "progress",	no_argument,		0x0,		'p'	},
-		{ "sparse",	no_argument,		0x0,		's'	},
+		{ "version",		no_argument,		0x0,		'v'	},
+		{ "progress",		no_argument,		0x0,		'p'	},
+		{ "sparse",		no_argument,		0x0,		's'	},
+		{ "ignore-checksum",	no_argument,		0x0,		'i'	},
 		{ 0x0,			0,					0x0,		0	}   
 	}; 
 
 	opterr = 0;
 	optind = 0;
 	int ch;
-	while ((ch = getopt_long(argc, argv, "hvps", longopts, 0x0)) != -1) {
+	while ((ch = getopt_long(argc, argv, "hvpis", longopts, 0x0)) != -1) {
 		switch(ch)
 		{
 			case 'p':
@@ -101,6 +104,9 @@ int main(int argc, char* argv[])
 			break;
 			case 's':
 				sparse = true;
+			break;
+			case 'i':
+				ignore_checksum = true;
 			break;
 			case 'h':
 				usage(stdout, 0);
@@ -171,6 +177,8 @@ int main(int argc, char* argv[])
 				disk.Verbose();
 			if (sparse)
 				disk.Sparse();
+			if (ignore_checksum)
+				disk.IgnoreChecksum();
 			argv++;
 			argc--;
 			disk.Export(*argv);
