@@ -38,7 +38,7 @@
 
 bool XVA::ReadFile(const std::string& path, std::string& result)
 {
-	FILE* fp = fopen(path.c_str(), "r");
+	FILE* fp = fopen(path.c_str(), "rb");
 
  	if (!fp)
 		return false;

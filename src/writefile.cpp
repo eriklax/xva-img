@@ -38,7 +38,7 @@
 
 bool XVA::WriteFile(const std::string& path, const std::string& data)
 {
-	FILE* fp = fopen(path.c_str(), "w");
+	FILE* fp = fopen(path.c_str(), "wb");
 
 	if (!fp)
 		return false;
