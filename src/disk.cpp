@@ -72,7 +72,8 @@ bool Disk::Export(const std::string& diskpath)
 	while((de=readdir(dp)) != NULL)
 	{
 		unsigned int part;
-		if (strlen(de->d_name) == 8 && sscanf(de->d_name, "%u", &part))
+		int parsed = -1;
+		if (strlen(de->d_name) == 8 && sscanf(de->d_name, "%u%n", &part, &parsed) && parsed == 8)
 		{
 			parts.insert(part);
 		}
