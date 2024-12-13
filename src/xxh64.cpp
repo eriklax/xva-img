@@ -47,7 +47,7 @@ std::string XVA::XXH64(const std::string& input)
 	XXH64_canonicalFromHash((XXH64_canonical_t *)digest, int_digest);
 	XXH64_freeState(state);
 
-	char digest_chars[16];
+	char digest_chars[17];
 	for (int i = 0, j = 0; i < 8; i++) {
 		unsigned char c;
 		c = (digest[i] >> 4) & 0xf;
@@ -57,7 +57,6 @@ std::string XVA::XXH64(const std::string& input)
 		c = (c > 9) ? c + 'A' - 10 : c + '0';
 		digest_chars[j++] = c;
 	}
-	std::string hexdigest(digest_chars);
-	hexdigest.resize(16);
-	return hexdigest;
+	digest_chars[16] = '\0';
+	return std::string(digest_chars);
 }
