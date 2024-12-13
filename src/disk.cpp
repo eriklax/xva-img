@@ -91,10 +91,11 @@ bool Disk::Export(const std::string& diskpath)
 	if (m_verbose)
 		progress.Start();
 
-	for(unsigned int i = 0; i <= (*parts.rbegin()); i++)
+	unsigned int const last = *parts.rbegin();
+	for(unsigned int i = 0; i <= last; i++)
 	{
 		if (m_verbose)
-			progress.Update(((float)i / *parts.rbegin())*100);
+			progress.Update(((float)i / last)*100);
 
 		if (parts.find(i) != parts.end())
 		{
