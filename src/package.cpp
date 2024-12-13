@@ -98,7 +98,7 @@ void XVAPackage::AddDir(const std::string& path)
 bool XVAPackage::Write(const std::string& file)
 	noexcept(false)
 {
-	FILE* fp = fopen(file.c_str(), "w");
+	FILE* fp = fopen(file.c_str(), "wb");
 	if (!fp)
 		throw std::runtime_error("unable to open " + file);
 

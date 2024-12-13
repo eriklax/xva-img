@@ -83,7 +83,7 @@ bool Disk::Export(const std::string& diskpath)
 	if (parts.empty())
 		throw std::runtime_error("directory " + m_path + " is empty");
 
-	FILE* fp = fopen(diskpath.c_str(), "w");
+	FILE* fp = fopen(diskpath.c_str(), "wb");
 	if (!fp)
 		throw std::runtime_error("unable to open " + diskpath);
 
@@ -200,7 +200,7 @@ bool Disk::Import(const std::string& diskpath)
 	if (files != 0)
 		throw std::runtime_error("directory " + m_path + " is not empty");
 
-	FILE* fp = fopen(diskpath.c_str(), "r");
+	FILE* fp = fopen(diskpath.c_str(), "rb");
 	if (!fp)
 		throw std::runtime_error("unable to open " + diskpath);
 
